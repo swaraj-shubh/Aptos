@@ -129,7 +129,7 @@ export default function Header() {
             </svg>
           </div>
           <Link href="/">
-            <h1 className="text-xl font-bold text-white">SecurePay</h1>
+            <h1 className="text-xl font-bold text-white">heheConnect</h1>
           </Link>
         </div>
 

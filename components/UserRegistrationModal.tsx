@@ -145,52 +145,52 @@ export default function UserRegistrationModal({
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-slate-800/90 backdrop-blur-sm border border-slate-700/50 rounded-3xl p-8 max-w-lg w-full shadow-2xl transform transition-all duration-300 scale-100">
+      <div className="bg-white/90 backdrop-blur-sm border border-emerald-200 rounded-3xl p-8 max-w-lg w-full shadow-2xl transform transition-all duration-300 scale-100">
         <div className="text-center">
           {/* Icon */}
-          <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+          <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </div>
           
           {/* Title */}
-          <h3 className="text-2xl font-bold text-white mb-3">Complete Registration</h3>
-          <p className="text-slate-300 mb-8">Please register with a unique username to continue</p>
+          <h3 className="text-2xl font-bold text-emerald-900 mb-3">Complete Registration</h3>
+          <p className="text-emerald-700 mb-8">Please register with a unique username to continue</p>
           
           {/* Wallet Address Display */}
-          <div className="bg-slate-700/50 rounded-xl p-5 mb-8">
-            <p className="text-slate-400 text-sm mb-3 text-center font-medium">Connected Wallet</p>
-            <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-              <p className="text-white font-mono text-xs text-center break-all leading-relaxed select-all">{walletAddress}</p>
+          <div className="bg-emerald-50 rounded-xl p-5 mb-8">
+            <p className="text-emerald-600 text-sm mb-3 text-center font-medium">Connected Wallet</p>
+            <div className="bg-white rounded-lg p-4 border border-emerald-200">
+              <p className="text-emerald-900 font-mono text-xs text-center break-all leading-relaxed select-all">{walletAddress}</p>
             </div>
           </div>
           
           {/* Username Input */}
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-3 text-left">
+              <label className="block text-sm font-medium text-emerald-700 mb-3 text-left">
                 Username
               </label>
-              <p className="text-xs text-slate-400 mb-3">Only letters allowed (a-z, A-Z), no spaces, numbers, or special characters</p>
+              <p className="text-xs text-emerald-600 mb-3">Only letters allowed (a-z, A-Z), no spaces, numbers, or special characters</p>
               <div className="relative">
                 <input
                   type="text"
                   value={username}
                   onChange={handleUsernameChange}
                   placeholder="Enter username (letters only)"
-                  className={`w-full px-4 py-3 pr-12 bg-slate-700/50 border rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                  className={`w-full px-4 py-3 pr-12 bg-white border rounded-xl text-emerald-900 placeholder-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 ${
                     isUsernameAvailable === true 
                       ? 'border-green-500/50' 
                       : isUsernameAvailable === false 
                       ? 'border-red-500/50' 
-                      : 'border-slate-600/50'
+                      : 'border-emerald-200'
                   }`}
                   disabled={loading}
                 />
                 {isCheckingUsername && (
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
                   </div>
                 )}
                 {isUsernameAvailable === true && !isCheckingUsername && (
@@ -218,7 +218,7 @@ export default function UserRegistrationModal({
                 </p>
               )}
               {isUsernameAvailable === true && !isCheckingUsername && (
-                <p className="text-green-400 text-sm mt-2 flex items-center">
+                <p className="text-green-500 text-sm mt-2 flex items-center">
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
@@ -231,8 +231,8 @@ export default function UserRegistrationModal({
             {message && (
               <div className={`p-4 rounded-xl text-sm text-center ${
                 message.includes("successful") 
-                  ? "bg-green-500/20 text-green-400 border border-green-500/30" 
-                  : "bg-red-500/20 text-red-400 border border-red-500/30"
+                  ? "bg-green-500/20 text-green-600 border border-green-500/30" 
+                  : "bg-red-500/20 text-red-600 border border-red-500/30"
               }`}>
                 {message}
               </div>
@@ -242,7 +242,7 @@ export default function UserRegistrationModal({
             <button
               onClick={handleRegister}
               disabled={loading || !username.trim() || isUsernameAvailable !== true || isCheckingUsername}
-              className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl font-semibold text-lg hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg transform hover:scale-102 active:scale-95"
+              className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl font-semibold text-lg hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg transform hover:scale-102 active:scale-95"
             >
               {loading ? (
                 <div className="flex items-center justify-center space-x-2">

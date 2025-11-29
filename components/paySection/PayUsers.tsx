@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 // Import all the components
 import PaymentSidebar from "@/components/PaymentSidebar";
 import MakePaymentForm from "@/components/MakePaymentForm";
-import PaymentHistory from "@/components/PaymentHistory";
+import PaymentHistory from "@/components/paymentHistory/PaymentHistory";
 import UserRegistrationModal from "@/components/UserRegistrationModal";
 import {
   useWallet,
@@ -171,7 +171,7 @@ export default function PayPage() {
   return (
     <div className="flex h-[calc(100vh-80px)] overflow-hidden">
       {/* Sidebar with tab switching */}
-      <PaymentSidebar activeTab={activeTab} onTabChange={setActiveTab} />
+      {/* <PaymentSidebar activeTab={activeTab} onTabChange={setActiveTab} /> */}
 
       <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500">
         {activeTab === "make" ? (
