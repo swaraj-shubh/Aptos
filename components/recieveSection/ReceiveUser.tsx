@@ -1,111 +1,80 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import ReceivePayments from '@/components/ReceivePayments';
-import ReceiveSidebar from '@/components/ReceiveSidebar';
+import { useState, useEffect } from "react";
 import UserRegistrationModal from "@/components/UserRegistrationModal";
-import {
-  useWallet,
-} from "@aptos-labs/wallet-adapter-react";
-// import GetQR from '@/components/GetQR';
-import GetQR from '../GetQr';
+import GetQR from "../GetQr";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+
+/**
+ * ReceivePage
+ * - fetches current user from /api/users when wallet connects
+ * - compares addresses case-insensitively
+ * - shows registration modal if user not found
+ * - renders GetQR with correct username (uses `name` field)
+ */
 
 export default function ReceivePage() {
-  const { account, isLoading, connected, connect, disconnect } =
-    useWallet();
+  const { account, connected } = useWallet();
+
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [checkingUser, setCheckingUser] = useState(false);
   const [hasCheckedUser, setHasCheckedUser] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
-  const maxRetries = 5;
-  console.log("Wallet Info:", account?.address?.toString(), connected);
 
+  // Fetch current user from backend /api/users
   const fetchCurrentUser = async (isRetry = false) => {
-    if (!account?.address || !connected || hasCheckedUser) return;
-    
-    // Only show spinner on first attempt, not on retries
-    if (!isRetry) {
-      setCheckingUser(true);
-    }
-    
+    // require wallet address + connected
+    if (!account?.address || !connected) return;
+    // guard so we don't repeatedly fetch if already checked
+    if (hasCheckedUser && !isRetry) return;
+
+    if (!isRetry) setCheckingUser(true);
+
     try {
-      console.log("Fetching current user...", { address: account?.address?.toString(), connected, hasCheckedUser, isRetry });
-      const res = await fetch('/api/users');
+      const res = await fetch("/api/users");
       const data = await res.json();
-      console.log("Users data received:", data);
-      if (data.success) {
-        const user = data.users.find((u: any) => u.walletAddress.toLowerCase() === account?.address?.toString());
-        console.log("Current user found:", user);
-        setCurrentUser(user);
-        setHasCheckedUser(true);
-        setRetryCount(0); // Reset retry count on success
-        
-        if (!user) {
-          // User not found, show registration modal
-          setShowRegistrationModal(true);
-        } else {
-          // User found, close registration modal if it's open
-          setShowRegistrationModal(false);
-        }
-      } else {
-        console.log('API call failed:', data.error);
+      if (!data.success) {
+        console.error("GET /api/users returned error:", data);
+        return;
       }
-    } catch (error) {
-      console.error("Error fetching current user:", error);
+
+      const normalizedAddress = account.address.toString().toLowerCase();
+      const user = data.users.find(
+        (u: any) =>
+          typeof u.walletAddress === "string" &&
+          u.walletAddress.toLowerCase() === normalizedAddress
+      );
+
+      setCurrentUser(user ?? null);
+      setHasCheckedUser(true);
+      setShowRegistrationModal(!user);
+    } catch (err) {
+      console.error("Error fetching current user:", err);
     } finally {
-      if (!isRetry) {
-        setCheckingUser(false);
-      }
+      if (!isRetry) setCheckingUser(false);
     }
   };
-  console.log("user details: ", currentUser);
-  // useEffect(() => {
-  //   if (connected && account?.address && !hasCheckedUser) {
-  //     console.log('useEffect triggered - fetching user (receive page)');
-  //     fetchCurrentUser();
-  //   }
-  // }, [connected, account?.address, hasCheckedUser]);
 
-  // Reset hasCheckedUser when address changes (wallet switch)
+  // Run fetch when wallet connects or address changes
   useEffect(() => {
-    if (account?.address) {
-      console.log('Receive page: Address changed, resetting user check flag');
+    if (connected && account?.address) {
+      fetchCurrentUser();
+    } else {
+      // reset when disconnected or no address
+      setCurrentUser(null);
       setHasCheckedUser(false);
-      setRetryCount(0);
-      // Close registration modal when switching wallets
       setShowRegistrationModal(false);
     }
-  }, [account?.address]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connected, account?.address]);
 
-  // Retry mechanism for when address might be undefined initially
-  useEffect(() => {
-    if (connected && !account?.address && !hasCheckedUser && retryCount < maxRetries) {
-      const retryTimer = setTimeout(() => {
-        console.log(`Retrying user check (receive page) (attempt ${retryCount + 1}/${maxRetries})`);
-        setRetryCount(prev => prev + 1);
-        // Try to fetch user again if address becomes available
-        if (account?.address) {
-          fetchCurrentUser(true);
-        }
-      }, 1000 * (retryCount + 1)); // Increasing delay: 1s, 2s, 3s, 4s, 5s
-
-      return () => clearTimeout(retryTimer);
-    }
-  }, [connected, account?.address, hasCheckedUser, retryCount, maxRetries]);
-
+  // handle registration completion: refetch user
   const handleRegistrationComplete = () => {
     setShowRegistrationModal(false);
-    // Reset the check flag and refresh user data
     setHasCheckedUser(false);
-    setRetryCount(0); // Reset retry count
-    
-    // Dispatch event to refresh Header user data
-    window.dispatchEvent(new CustomEvent('refreshHeaderUser'));
-    
-    if (account?.address) {
-      fetchCurrentUser();
-    }
+    fetchCurrentUser();
+    // notify other UI as before
+    window.dispatchEvent(new CustomEvent("refreshHeaderUser"));
   };
 
   if (!connected || !account?.address) {
@@ -113,7 +82,7 @@ export default function ReceivePage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="w-20 h-20 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2L2 7L12 12L22 7L12 2Z" />
               <path d="M2 17L12 22L22 17" />
               <path d="M2 12L12 17L22 12" />
@@ -126,7 +95,6 @@ export default function ReceivePage() {
     );
   }
 
-  // Show loading state while checking user
   if (checkingUser) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -138,25 +106,23 @@ export default function ReceivePage() {
     );
   }
 
-
+  // Show the QR + registration modal (if needed)
   return (
-    <div className="flex h-[calc(100vh-80px)] overflow-hidden">
-      {/* Sidebar with tab switching */}
-      {/* <ReceiveSidebar activeTab={activeTab} onTabChange={setActiveTab} /> */}
+    <div className="flex h-[calc(100vh-80px)] overflow-hidden items-start p-6">
+      <div>
+        <GetQR
+          username={currentUser?.name ?? "guest"} // use `name` field from user doc
+          walletAddress={account.address.toString()}
+          size={200}
+          showDetails={true}
+        />
+      </div>
 
-
-  <GetQR
-    username={currentUser ? currentUser.username : "guest"}
-    walletAddress={account?.address?.toString() || "0x1234...abcd"}
-    size={200}
-    showDetails={true}
-  />
-      {/* User Registration Modal */}
       <UserRegistrationModal
         isOpen={showRegistrationModal}
         onClose={() => setShowRegistrationModal(false)}
         onComplete={handleRegistrationComplete}
-        walletAddress={account?.address.toString()}
+        walletAddress={account.address.toString()}
       />
     </div>
   );
