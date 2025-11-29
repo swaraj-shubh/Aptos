@@ -53,6 +53,7 @@ export default function IncomingRequestsList() {
         const pendingOnly = (data.requests || []).filter((r: Req) => r.status === 'pending');
         setRequests(pendingOnly);
         setFilteredRequests(pendingOnly);
+        console.log("Fetched incoming requests:", pendingOnly);
       }
     } catch (e) {
       console.error(e);
@@ -108,27 +109,32 @@ export default function IncomingRequestsList() {
   // --- ACTIONS ---
 
   // 1. REJECT LOGIC
-  const handleReject = async (requestId: string) => {
-    if(!confirm("Are you sure you want to reject this request?")) return;
+// Inside IncomingRequestsList component
+
+const handleReject = async (requestId: string) => {
+  // 1. Confirm
+  if(!confirm("Are you sure you want to reject this request?")) return;
+  
+  setProcessingId(requestId);
+  try {
+    // 2. Call API
+    const res = await fetch(`/api/requests/${requestId}/reject`, { method: "POST" });
+    const data = await res.json();
     
-    setProcessingId(requestId);
-    try {
-      const res = await fetch(`/api/requests/${requestId}/reject`, { method: "POST" });
-      const data = await res.json();
-      
-      if(data.success) {
-        toast.info("Request rejected");
-        // Remove from UI immediately
-        setRequests(prev => prev.filter(r => r.requestId !== requestId));
-      } else {
-        toast.error("Failed to reject");
-      }
-    } catch (e) {
-      toast.error("Error rejecting request");
-    } finally {
-      setProcessingId(null);
+    if(data.success) {
+      toast.info("Request rejected");
+      // 3. 🔥 Instant UI Update: Remove it from the list immediately
+      setRequests(prev => prev.filter(r => r.requestId !== requestId));
+      setFilteredRequests(prev => prev.filter(r => r.requestId !== requestId));
+    } else {
+      toast.error("Failed to reject");
     }
-  };
+  } catch (e) {
+    toast.error("Error rejecting request");
+  } finally {
+    setProcessingId(null);
+  }
+};
 
   // 2. ACCEPT / PAY LOGIC
   const acceptRequest = async (r: Req) => {
@@ -158,6 +164,22 @@ export default function IncomingRequestsList() {
           payerAddress: account?.address,
         }),
       });
+
+// 2. 🔥 SAVE TO HISTORY (Calling your existing payments API)
+  await fetch("/api/payments", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      senderAddress: account?.address?.toString(),
+      senderName: "You",
+      receiverAddress: r.requesterAddress,
+      receiverName: r.requesterName || "Unknown",
+      amount: r.amount,       // octas
+      amountInEth: r.amountInHuman, // Readable amount
+      transactionHash: submitted.hash,
+      status: "success",
+    }),
+  });
 
       toast.success("Paid successfully!");
       // Remove from UI immediately

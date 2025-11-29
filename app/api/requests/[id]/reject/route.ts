@@ -1,4 +1,3 @@
-// app/api/requests/[id]/reject/route.ts
 import { NextResponse } from "next/server";
 import { connectMongoose } from "@/lib/mongodb";
 import Request from "@/Models/Request";
@@ -8,7 +7,8 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     await connectMongoose();
     const id = params.id;
 
-    // Find and update status to rejected
+    // Find and update status to 'rejected'
+    // We use findOneAndUpdate to ensure atomic operation
     const r = await Request.findOneAndUpdate(
       { requestId: id },
       { status: "rejected" },
