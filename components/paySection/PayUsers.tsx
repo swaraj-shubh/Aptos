@@ -32,7 +32,7 @@ export default function PayPage() {
     try {
       const res = await fetch("/api/users");
       const data = await res.json();
-
+      console.log("Fetched users data:", data);
       if (data.success) {
         const user = data.users.find(
           (u: any) =>
