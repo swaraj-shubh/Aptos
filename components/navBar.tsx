@@ -114,30 +114,24 @@ export default function Header() {
   }, [connected, account?.address]);
 
   return (
-    <div className="bg-slate-800/30 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
+    <div className="bg-white backdrop-blur-sm border-b border-emerald-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
-            <svg
-              className="w-5 h-5 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2L2 7L12 12L22 7L12 2Z" />
-              <path d="M2 17L12 22L22 17" />
-              <path d="M2 12L12 17L22 12" />
+          <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
             </svg>
           </div>
           <Link href="/">
-            <h1 className="text-xl font-bold text-white">heheConnect</h1>
+            <h1 className="text-xl font-bold text-emerald-900">GreenPay</h1>
           </Link>
         </div>
 
         <div className="flex items-center space-x-4">
           {/* Retry indicator */}
           {isRetrying && (
-            <div className="flex items-center space-x-2 text-slate-400 text-sm">
-              <div className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
+            <div className="flex items-center space-x-2 text-emerald-600 text-sm">
+              <div className="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
               <span>Loading user data...</span>
             </div>
           )}
@@ -146,13 +140,13 @@ export default function Header() {
             <>
               {connected && currentUser && (
                 <>
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
                     <span className="text-white font-bold text-lg">
                       {currentUser.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <div className="flex items-center space-x-2 bg-slate-700/50 rounded-xl px-4 py-2 border border-slate-600/50">
-                    <p className="text-white font-semibold text-base">
+                  <div className="flex items-center space-x-2 bg-emerald-50 rounded-xl px-4 py-2 border border-emerald-200">
+                    <p className="text-emerald-900 font-semibold text-base">
                       @{currentUser.name}
                     </p>
                     <button
@@ -160,7 +154,7 @@ export default function Header() {
                         navigator.clipboard.writeText(`@${currentUser.name}`);
                         // You could add a toast notification here
                       }}
-                      className="text-slate-400 hover:text-white transition-colors p-1"
+                      className="text-emerald-600 hover:text-emerald-900 transition-colors p-1"
                     >
                       <svg
                         className="w-3 h-3"
@@ -183,13 +177,13 @@ export default function Header() {
             </>
           ) : connected && currentUser ? (
             <>
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-lg">
                   {currentUser.name.charAt(0).toUpperCase()}
                 </span>
               </div>
-              <div className="flex items-center space-x-2 bg-slate-700/50 rounded-xl px-4 py-2 border border-slate-600/50">
-                <p className="text-white font-semibold text-base">
+              <div className="flex items-center space-x-2 bg-emerald-50 rounded-xl px-4 py-2 border border-emerald-200">
+                <p className="text-emerald-900 font-semibold text-base">
                   @{currentUser.name}
                 </p>
                 <button
@@ -197,7 +191,7 @@ export default function Header() {
                     navigator.clipboard.writeText(`@${currentUser.name}`);
                     // You could add a toast notification here
                   }}
-                  className="text-slate-400 hover:text-white transition-colors p-1"
+                  className="text-emerald-600 hover:text-emerald-900 transition-colors p-1"
                 >
                   <svg
                     className="w-3 h-3"

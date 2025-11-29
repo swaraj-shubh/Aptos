@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { WalletProvider } from "@/context";
 import { headers } from "next/headers";
-import Header from "@/components/Header";
+import Header from "@/components/navBar";
 import Footer from "@/components/Footer";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

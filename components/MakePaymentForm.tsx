@@ -62,7 +62,7 @@ export default function MakePaymentForm({
             <button
               onClick={handleMakePayment}
               disabled={!selectedRecipient || !amount}
-              className="w-full py-4 bg-emerald-600 text-white rounded-xl text-lg font-semibold hover:bg-emerald-700 disabled:opacity-50"
+              className="w-full py-4 bg-green-600 text-white rounded-xl text-lg font-semibold hover:bg-green-700 disabled:opacity-50"
             >
               Continue to Payment
             </button>

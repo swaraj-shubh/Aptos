@@ -1,3 +1,4 @@
+// api/payments/update-status/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { connectMongoose } from "@/lib/mongodb";
 import Payment from "@/Models/PaymentModel";

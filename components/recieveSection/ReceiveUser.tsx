@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import ReceivePayments from '@/components/ReceivePayments';
 import ReceiveSidebar from '@/components/ReceiveSidebar';
 import UserRegistrationModal from "@/components/UserRegistrationModal";
+import GetQR from '../GetQr';
 import { useWallet } from '@aptos-labs/wallet-adapter-react';
 
 export default function ReceivePage() {
@@ -135,20 +136,13 @@ export default function ReceivePage() {
 
   return (
     <div className="flex h-[calc(100vh-80px)] overflow-hidden">
-      {/* Sidebar with tab switching */}
-      {/* <ReceiveSidebar activeTab={activeTab} onTabChange={setActiveTab} /> */}
-
-      <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600 hover:scrollbar-thumb-slate-500">
-        <ReceivePayments userAddress={account?.address.toString()} />
-      </div>
-
-      {/* User Registration Modal */}
-      <UserRegistrationModal
-        isOpen={showRegistrationModal}
-        onClose={() => setShowRegistrationModal(false)}
-        onComplete={handleRegistrationComplete}
-        walletAddress={account?.address.toString()}
-      />
+  
+<GetQR 
+  username={currentUser ? currentUser.name : ''}
+  walletAddress={account?.address.toString()} 
+  size={200}
+  showDetails={true}
+/>
     </div>
   );
 }
