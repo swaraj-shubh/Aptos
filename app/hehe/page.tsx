@@ -5,8 +5,8 @@ import PayPage from "@/components/paySection/PayUsers";
 import ReceivePage from "@/components/recieveSection/ReceiveUser";
 import PaymentHistory from "@/components/paymentHistory/PaymentHistory";
 
-import RequestPaymentForm from "@/components/RequestPaymentForm";
-import IncomingRequestsList from "@/components/IncomingRequestsList";
+import RequestPaymentForm from "@/components/requestAPT/RequestPaymentForm";
+import IncomingRequestsList from "@/components/requestAPT/IncomingRequestsList";
 
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 

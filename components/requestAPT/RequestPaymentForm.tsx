@@ -124,11 +124,11 @@ export default function RequestPaymentForm({ currentUser }: Props) {
 
   return (
     <div className="p-4 bg-white rounded-xl shadow space-y-3 relative">
-      <h3 className="font-semibold">Request Payment</h3>
+      <h3 className="text-black font-semibold">Request Payment</h3>
 
       {/* SEARCH INPUT */}
       <input
-        className="w-full p-2 border rounded"
+        className="w-full text-black p-2 border rounded"
         placeholder="Username or wallet (e.g. @alice or 0x123...)"
         value={usernameOrAddress}
         onChange={(e) => setUsernameOrAddress(e.target.value)}
@@ -153,7 +153,7 @@ export default function RequestPaymentForm({ currentUser }: Props) {
 
       {/* AMOUNT */}
       <input
-        className="w-full p-2 border rounded"
+        className="w-full text-black p-2 border rounded"
         placeholder="Amount (APT)"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
@@ -161,7 +161,7 @@ export default function RequestPaymentForm({ currentUser }: Props) {
 
       {/* MEMO */}
       <input
-        className="w-full p-2 border rounded"
+        className="w-full text-black p-2 border rounded"
         placeholder="Memo (optional)"
         value={memo}
         onChange={(e) => setMemo(e.target.value)}
@@ -169,7 +169,7 @@ export default function RequestPaymentForm({ currentUser }: Props) {
 
       {/* BUTTON */}
       <button
-        className="px-4 py-2 bg-emerald-600 text-white rounded"
+        className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition-colors w-full font-semibold disabled:bg-emerald-300 cursor-pointer"
         disabled={isSubmitting}
         onClick={createRequest}
       >

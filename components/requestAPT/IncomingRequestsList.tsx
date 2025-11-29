@@ -146,12 +146,12 @@ export default function IncomingRequestsList() {
   if (!connected) return <div>Please connect wallet</div>;
 
   return (
-    <div className="p-4 bg-white rounded-xl shadow space-y-3">
+    <div className="p-4 bg-white text-black rounded-xl shadow space-y-3">
       <h3 className="font-semibold">Incoming Requests</h3>
 
       {/* SEARCH BAR */}
       <input
-        className="w-full p-2 border rounded"
+        className="w-full text-black p-2 border rounded"
         placeholder="Search requester ( @username )"
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
@@ -164,7 +164,7 @@ export default function IncomingRequestsList() {
           {suggestions.map((user) => (
             <div
               key={user.walletAddress}
-              className="p-2 hover:bg-emerald-100 cursor-pointer"
+              className="p-2 text-black hover:bg-emerald-100 cursor-pointer"
               onClick={() => handleSelectUser(user)}
             >
               <div className="font-medium">@{user.name}</div>
