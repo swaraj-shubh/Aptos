@@ -82,12 +82,34 @@ export default function MakePaymentForm({
     setShowPaymentModal(true);
   };
 
+  /**
+   * 🔥 UPDATED: Payment + Photon Reward Trigger
+   */
   const confirmPayment = async () => {
     if (!selectedRecipient || !amount) return;
     setIsLoading(true);
 
     try {
+      // 1️⃣ Execute on-chain payment
       await onPaymentComplete(selectedRecipient, amount);
+
+      // 2️⃣ Call Reward API AFTER payment success
+      await fetch("/api/rewards", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          walletAddress: account?.address?.toString(),
+          eventType: "PAYMENT_COMPLETED",
+          campaignId: "PAYMENT_REWARD_CAMPAIGN", // <-- replace with your Photon campaign ID
+          metadata: {
+            amount,
+            to: selectedRecipient.walletAddress,
+            username: selectedRecipient.name,
+          },
+        }),
+      });
+
+      // 3️⃣ Reset UI states
       setSelectedRecipient(null);
       setAmount("");
       setScannedData(null);

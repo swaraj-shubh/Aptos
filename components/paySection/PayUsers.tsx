@@ -1,3 +1,4 @@
+// app/pay/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,7 +8,11 @@ import { toast } from "react-toastify";
 import MakePaymentForm from "@/components/MakePaymentForm";
 import UserRegistrationModal from "@/components/UserRegistrationModal";
 
-import { useWallet, InputTransactionData } from "@aptos-labs/wallet-adapter-react";
+import {
+  useWallet,
+  InputTransactionData,
+} from "@aptos-labs/wallet-adapter-react";
+
 import { aptos } from "@/lib/aptos";
 
 export default function PayPage() {
@@ -45,6 +50,7 @@ export default function PayPage() {
     }
   };
 
+  // Load user on wallet connect
   useEffect(() => {
     fetchCurrentUser();
   }, [account?.address, connected]);
@@ -60,6 +66,9 @@ export default function PayPage() {
     );
   }
 
+  // ------------------------------
+  // User loading
+  // ------------------------------
   if (checkingUser) {
     return (
       <div className="flex items-center justify-center min-h-screen text-slate-300">
@@ -69,94 +78,83 @@ export default function PayPage() {
   }
 
   // ------------------------------
-  // SEND PAYMENT
-  // ------------------------------
-  async function handleSend(recipient: User, amount: string) {
-    if (!recipient || !recipient.walletAddress) {
-      toast.error("Recipient not valid");
-      return;
-    }
-
-    if (!signAndSubmitTransaction) {
-      toast.error("Wallet not connected");
-      return;
-    }
-
-    const octas = Math.floor(Number(amount) * 1e8);
-    let txHash: string | null = null;
-
-    try {
-      // Format address correctly
-      const receiverAddress =
-        recipient.walletAddress.startsWith("0x")
-          ? recipient.walletAddress
-          : "0x" + recipient.walletAddress;
-
-      // ------------------------------
-      // CORRECT APTOS PAYLOAD (FIXED)
-      // ------------------------------
-      const payload: InputTransactionData = {
-        data: {
-          type: "entry_function_payload",
-          function: "0x1::coin::transfer",
-          typeArguments: ["0x1::aptos_coin::AptosCoin"],
-          functionArguments: [receiverAddress, octas],
-        },
-      };
-
-      // Send TX
-      const submitted = await signAndSubmitTransaction(payload);
-      txHash = submitted.hash;
-
-      await aptos.waitForTransaction({ transactionHash: txHash });
-
-      // Save SUCCESS
-      await fetch("/api/payments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          senderAddress: account.address.toString(),
-          senderName: currentUser?.name || "Unknown",
-          receiverAddress: receiverAddress,
-          receiverName: recipient.name,
-          amount: octas.toString(),
-          amountInEth: amount,
-          transactionHash: txHash,
-          status: "success",
-        }),
-      });
-
-      toast.success("Payment sent successfully!");
-    } catch (err) {
-      console.error("Payment failed:", err);
-
-      // Save FAIL in MongoDB
-      await fetch("/api/payments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          senderAddress: account.address.toString(),
-          senderName: currentUser?.name || "Unknown",
-          receiverAddress: recipient.walletAddress,
-          receiverName: recipient.name,
-          amount: octas.toString(),
-          amountInEth: amount,
-          transactionHash: txHash ?? "NO_HASH",
-          status: "failed",
-        }),
-      });
-
-      toast.error("Payment failed!");
-    }
-  }
-
-  // ------------------------------
-  // MAIN PAGE
+  // Main Page
   // ------------------------------
   return (
     <div className="flex h-[calc(100vh-80px)] overflow-hidden">
       <div className="flex-1 p-4 overflow-y-auto">
-        <MakePaymentForm onPaymentComplete={handleSend} />
+        <MakePaymentForm
+          onPaymentComplete={async (recipient: User, amount: string) => {
+            if (!recipient || !recipient.walletAddress) {
+              toast.error("Invalid recipient");
+              return;
+            }
+
+            if (!signAndSubmitTransaction) {
+              toast.error("Wallet not connected");
+              return;
+            }
+
+            const octas = Math.floor(Number(amount) * 1e8);
+            let txHash: string | null = null;
+
+            try {
+              // Transaction Payload
+              const txPayload: InputTransactionData = {
+                data: {
+                  function: "0x1::coin::transfer",
+                  typeArguments: ["0x1::aptos_coin::AptosCoin"],
+                  functionArguments: [recipient.walletAddress, octas],
+                },
+              };
+
+              // Send transaction
+              const submittedTx = await signAndSubmitTransaction(txPayload);
+              txHash = submittedTx.hash;
+
+              // Wait for confirmation
+              await aptos.waitForTransaction({ transactionHash: txHash });
+
+              // Save success in DB
+              await fetch("/api/payments", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                 senderAddress: account.address.toString(),
+                  senderName: currentUser?.name || "Unknown",
+                  receiverAddress: recipient.walletAddress,
+                  receiverName: recipient.name,
+                  amount: octas.toString(),
+                  amountInEth: amount,
+                  transactionHash: txHash,
+                  status: "success",
+                }),
+              });
+
+              toast.success("Payment sent successfully!");
+            } catch (error) {
+              console.error("Payment error:", error);
+
+              // Save failed transaction in DB
+              await fetch("/api/payments", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  senderAddress: account.address.toString(),
+                  senderName: currentUser?.name || "Unknown",
+                  receiverAddress: recipient.walletAddress,
+                  receiverName: recipient.name,
+                  amount: octas.toString(),
+                  amountInEth: amount,
+                  transactionHash: txHash ?? "NO_HASH",
+                  status: "failed",
+                }),
+              });
+
+              toast.error("Payment failed!");
+            }
+          }}
+        />
       </div>
 
       {/* Registration Modal */}
