@@ -1,16 +1,17 @@
-// models/Request.ts
+// Models/Request.ts
 import mongoose, { Document, Model, Schema } from "mongoose";
 
 export interface IRequest extends Document {
   requestId: string;
   requesterAddress: string;
   requesterName?: string;
-  payerAddress?: string | null;   // optional: who this request is for
+  payerAddress?: string | null;
   payerName?: string | null;
-  amount: string; // amount in octas (u64 string)
-  amountInHuman?: string; // e.g. "0.01"
+  amount: string; 
+  amountInHuman?: string;
   memo?: string;
-  status: "pending" | "paid" | "cancelled";
+  // Added 'rejected' to status
+  status: "pending" | "paid" | "cancelled" | "rejected";
   txHash?: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -21,12 +22,13 @@ const RequestSchema = new Schema<IRequest>(
     requestId: { type: String, required: true, unique: true },
     requesterAddress: { type: String, required: true, lowercase: true },
     requesterName: { type: String },
-    payerAddress: { type: String, lowercase: true }, // optional search target
+    payerAddress: { type: String, lowercase: true },
     payerName: { type: String },
-    amount: { type: String, required: true }, // store as string for big numbers
+    amount: { type: String, required: true },
     amountInHuman: { type: String },
     memo: { type: String },
-    status: { type: String, enum: ["pending", "paid", "cancelled"], default: "pending" },
+    // Updated enum to include 'rejected'
+    status: { type: String, enum: ["pending", "paid", "cancelled", "rejected"], default: "pending" },
     txHash: { type: String },
   },
   { timestamps: true }

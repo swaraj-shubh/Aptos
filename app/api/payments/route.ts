@@ -1,3 +1,4 @@
+// app/api/payments/route.ts
 import { NextResponse } from "next/server";
 import { connectMongoose } from "../../../lib/mongodb";
 import Payment from "../../../Models/Payment";
