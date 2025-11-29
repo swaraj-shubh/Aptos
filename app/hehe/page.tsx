@@ -23,11 +23,9 @@ export default function Page() {
           {/* Logo */}
           <div className="flex items-center space-x-3 mb-8">
             <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" />
-                <path d="M2 17L12 22L22 17" />
-                <path d="M2 12L12 17L22 12" />
-              </svg>
+          <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-600 rounded-lg flex items-center justify-center shadow-md">
+            <img src="../logo.png" alt="Logo" className="w-full h-full object-cover" />
+          </div>
             </div>
             <h1 className="text-xl font-bold text-emerald-900">GreenPay</h1>
           </div>

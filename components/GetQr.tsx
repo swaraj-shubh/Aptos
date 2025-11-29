@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import { motion } from "framer-motion";
 
 interface GetQRProps {
   username: string;
@@ -47,74 +48,156 @@ export default function GetQR({
     );
   }
 
-  return (
-    <div className="flex flex-col items-center p-6 bg-white rounded-2xl border border-emerald-200 shadow-lg">
-      {/* Header */}
-      <div className="text-center mb-4">
-        <h3 className="text-lg font-bold text-emerald-900 mb-1">Payment QR Code</h3>
-        <p className="text-emerald-600 text-sm">Scan to send payments</p>
-      </div>
+return (
+  <motion.div 
+    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+    animate={{ opacity: 1, scale: 1, y: 0 }}
+    transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
+    whileHover={{ y: -5, transition: { duration: 0.2 } }}
+    className="relative flex flex-col items-center p-8 bg-gradient-to-br from-white to-emerald-50 rounded-3xl border-2 border-emerald-100/80 shadow-2xl shadow-emerald-500/10 backdrop-blur-sm overflow-hidden"
+  >
+    {/* Background decorative elements */}
+    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-emerald-200/30 to-green-300/20 rounded-full -translate-y-16 translate-x-16" />
+    <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-emerald-200/20 to-green-300/10 rounded-full -translate-x-12 translate-y-12" />
+    
+    {/* Animated border glow */}
+    <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-emerald-400/10 via-green-500/5 to-emerald-600/10 opacity-0 hover:opacity-100 transition-opacity duration-500" />
 
-      {/* QR Code */}
-      <div className="mb-4 p-4 bg-white rounded-xl border-2 border-emerald-100">
-        <QRCodeSVG
-          value={qrValue}
-          size={size}
-          level="H"
-          includeMargin
-          fgColor="#047857" // Emerald color
-          bgColor="#ffffff"
-        />
+    {/* Header */}
+    <motion.div 
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.1 }}
+      className="relative text-center mb-6"
+    >
+      <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-emerald-500/25">
+        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+        </svg>
       </div>
+      <h3 className="text-2xl font-bold bg-gradient-to-r from-emerald-700 to-green-800 bg-clip-text text-transparent mb-2">
+        Payment QR Code
+      </h3>
+      <p className="text-emerald-600/80 text-sm font-medium">Scan to send instant payments</p>
+    </motion.div>
 
-      {/* User Details */}
-      {showDetails && (
-        <div className="w-full space-y-3">
-          {/* Username */}
-          <div className="text-center">
-            <p className="text-xs text-emerald-600 mb-1">Username</p>
-            <div className="flex items-center justify-center space-x-2 bg-emerald-50 rounded-lg px-3 py-2 border border-emerald-200">
-              <div className="w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-xs font-bold">
+    {/* QR Code Container */}
+    <motion.div 
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
+      className="relative mb-6 p-6 bg-white rounded-2xl border-2 border-emerald-100 shadow-lg shadow-emerald-500/10 group"
+    >
+      {/* Animated border effect */}
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-400 to-green-500 opacity-0 group-hover:opacity-5 transition-opacity duration-300" />
+      
+      <QRCodeSVG
+        value={qrValue}
+        size={size}
+        level="H"
+        includeMargin
+        fgColor="#031d64ff" // Slightly brighter emerald
+        bgColor="#ffffff"
+        className="drop-shadow-sm"
+      />
+      
+      {/* Scanning animation overlay */}
+      <motion.div 
+        className="absolute inset-0 rounded-2xl bg-gradient-to-b from-transparent via-emerald-500/0 to-emerald-500/0"
+        animate={{ 
+          background: [
+            'linear-gradient(to bottom, transparent 0%, rgba(16, 185, 129, 0) 50%, transparent 100%)',
+            'linear-gradient(to bottom, transparent 0%, rgba(16, 185, 129, 0.1) 50%, transparent 100%)',
+            'linear-gradient(to bottom, transparent 0%, rgba(16, 185, 129, 0) 50%, transparent 100%)'
+          ]
+        }}
+        transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+      />
+    </motion.div>
+
+    {/* User Details */}
+    {showDetails && (
+      <motion.div 
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: "auto" }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        className="relative w-full space-y-4"
+      >
+        {/* Username */}
+        <motion.div 
+          className="text-center"
+          whileHover={{ scale: 1.02 }}
+          transition={{ type: "spring", stiffness: 400 }}
+        >
+          <p className="text-xs font-semibold text-emerald-600/70 mb-2 uppercase tracking-wide">Username</p>
+          <div className="flex items-center justify-between bg-white/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-emerald-200/60 shadow-sm hover:shadow-md transition-all duration-300">
+            <div className="flex items-center space-x-3">
+              <motion.div 
+                className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center shadow-md"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+              >
+                <span className="text-white text-sm font-bold">
                   {username.charAt(0).toUpperCase()}
                 </span>
-              </div>
-              <p className="text-emerald-900 font-semibold">@{username}</p>
-              <button
-                onClick={() => navigator.clipboard.writeText(`@${username}`)}
-                className="text-emerald-500 hover:text-emerald-700 transition-colors"
-              >
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              </button>
+              </motion.div>
+              <p className="text-emerald-900 font-semibold text-lg">@{username}</p>
             </div>
+            <motion.button
+              onClick={() => navigator.clipboard.writeText(`@${username}`)}
+              className="p-2 bg-emerald-100 hover:bg-emerald-200 rounded-lg transition-colors duration-200 group cursor-pointer"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <svg className="w-4 h-4 text-emerald-600 group-hover:text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </motion.button>
           </div>
+        </motion.div>
 
-          {/* Wallet Address */}
-          <div className="text-center">
-            <p className="text-xs text-emerald-600 mb-1">Wallet Address</p>
-            <div className="bg-emerald-50 rounded-lg px-3 py-2 border border-emerald-200">
-              <p className="text-emerald-900 font-mono text-xs break-all">
-                {walletAddress}
-              </p>
-              <button
-                onClick={() => navigator.clipboard.writeText(walletAddress)}
-                className="text-emerald-500 hover:text-emerald-700 text-xs mt-1 transition-colors"
-              >
-                Copy Address
-              </button>
-            </div>
+        {/* Wallet Address */}
+        <motion.div 
+          className="text-center"
+          whileHover={{ scale: 1.02 }}
+          transition={{ type: "spring", stiffness: 400 }}
+        >
+          <p className="text-xs font-semibold text-emerald-600/70 mb-2 uppercase tracking-wide">Wallet Address</p>
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-emerald-200/60 shadow-sm hover:shadow-md transition-all duration-300">
+            <p className="text-emerald-900 font-mono text-sm break-all mb-2 leading-relaxed">
+              {walletAddress}
+            </p>
+            <motion.button
+              onClick={() => navigator.clipboard.writeText(walletAddress)}
+              className="inline-flex items-center space-x-1 bg-gradient-to-r from-emerald-500 to-green-600 text-white text-xs font-semibold px-4 py-2 rounded-lg hover:from-emerald-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer"
+              whileHover={{ scale: 1.05, y: -1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span>Copy Address</span>
+            </motion.button>
           </div>
-        </div>
-      )}
+        </motion.div>
+      </motion.div>
+    )}
 
-      {/* Footer Info */}
-      <div className="mt-4 text-center">
-        <p className="text-emerald-500 text-xs">
-          Powered by <span className="font-semibold">GreenPay</span>
+    {/* Footer Info */}
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.5 }}
+      className="relative mt-6 text-center"
+    >
+      <div className="flex items-center justify-center space-x-2 text-emerald-500/70 text-xs">
+        <div className="w-1 h-1 bg-emerald-400 rounded-full" />
+        <p>
+          Powered by <span className="font-bold text-emerald-600">GreenPay</span>
         </p>
+        <div className="w-1 h-1 bg-emerald-400 rounded-full" />
       </div>
-    </div>
-  );
+    </motion.div>
+  </motion.div>
+);
 }
