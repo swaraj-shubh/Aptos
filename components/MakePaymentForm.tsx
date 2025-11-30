@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { User } from "@/types/models";
 import RecipientSelector from "./RecipientSelector";
@@ -6,10 +7,11 @@ import AmountInput from "./AmountInput";
 import PaymentModal from "./PaymentModal";
 import ScanQR from "./ScanQR";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { toast } from "react-toastify";
 
 interface MakePaymentFormProps {
   users?: User[];
-  onPaymentComplete: (recipient: User, amount: string) => Promise<void>;
+  onPaymentComplete: (recipient: User, amount: string, memo?: string) => Promise<void>;
   preselectedRecipient?: User | null;
 }
 
@@ -18,33 +20,42 @@ export default function MakePaymentForm({
   onPaymentComplete,
   preselectedRecipient,
 }: MakePaymentFormProps) {
-  const [selectedRecipient, setSelectedRecipient] = useState<User | null>(null);
+  const [selectedRecipient, setSelectedRecipient] = useState<User | null>(
+    preselectedRecipient ?? null
+  );
   const [amount, setAmount] = useState("");
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { account } = useWallet();
 
-  // QR Scanner States
+  // QR Scanner states
   const [scannedData, setScannedData] = useState<{
     username: string;
     walletAddress: string;
   } | null>(null);
+
   const [showScanner, setShowScanner] = useState(false);
 
-  // After QR Scan
+  // ------------------------------
+  // HANDLE QR SCAN
+  // ------------------------------
   const handleQRScanned = (data: { username: string; walletAddress: string }) => {
-    console.log("📌 Scanned Data:", data);
     setScannedData(data);
     setShowScanner(false);
 
-    const scannedUser: Partial<User> = {
-      walletAddress: data.walletAddress,
+    const scannedUser: User = {
+      walletAddress: data.walletAddress.startsWith("0x")
+        ? data.walletAddress
+        : `0x${data.walletAddress}`,
       name: data.username.replace("@", ""),
     };
-    setSelectedRecipient(scannedUser as User);
+
+    setSelectedRecipient(scannedUser);
   };
 
-  // Fetch actual user from DB when scanning
+  // ------------------------------
+  // Fetch actual DB user if scanned
+  // ------------------------------
   useEffect(() => {
     const fetchUser = async () => {
       if (!scannedData) return;
@@ -54,71 +65,72 @@ export default function MakePaymentForm({
         const data = await res.json();
 
         if (data.success) {
-          const usernameWithoutAt = scannedData.username.replace("@", "");
-          const foundUser =
-            data.users.find((u: User) => u.name.toLowerCase() === usernameWithoutAt.toLowerCase()) ||
-            data.users.find((u: User) => u.walletAddress.toLowerCase() === scannedData.walletAddress.toLowerCase());
+          const username = scannedData.username.replace("@", "");
+          const found =
+            data.users.find((u: User) => u.name.toLowerCase() === username.toLowerCase()) ||
+            data.users.find(
+              (u: User) =>
+                u.walletAddress.toLowerCase() ===
+                scannedData.walletAddress.toLowerCase()
+            );
 
           setSelectedRecipient(
-            foundUser || ({
+            found || {
               walletAddress: scannedData.walletAddress,
-              name: usernameWithoutAt,
-            } as User)
+              name: username,
+            }
           );
         }
       } catch {
         setSelectedRecipient({
           walletAddress: scannedData.walletAddress,
           name: scannedData.username.replace("@", ""),
-        } as User);
+        });
       }
     };
 
     fetchUser();
   }, [scannedData]);
 
+  // ------------------------------
+  // Payment UI flow
+  // ------------------------------
   const handleMakePayment = () => {
-    if (!selectedRecipient || !amount) return;
+    if (!selectedRecipient || !amount) {
+      toast.error("Please select a recipient & enter an amount");
+      return;
+    }
     setShowPaymentModal(true);
   };
 
-  /**
-   * 🔥 UPDATED: Payment + Photon Reward Trigger
-   */
-  const confirmPayment = async () => {
+  // ------------------------------
+  // CONFIRM PAYMENT (now supports memo + on-chain)
+  // ------------------------------
+  const confirmPayment = async (memo?: string) => {
     if (!selectedRecipient || !amount) return;
     setIsLoading(true);
 
     try {
-      // 1️⃣ Execute on-chain payment
-      await onPaymentComplete(selectedRecipient, amount);
+      // Execute the full on-chain payment flow
+      await onPaymentComplete(selectedRecipient, amount, memo ?? "payment");
 
-      // 2️⃣ Call Reward API AFTER payment success
-      await fetch("/api/rewards", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          walletAddress: account?.address?.toString(),
-          eventType: "PAYMENT_COMPLETED",
-          campaignId: "ea3bcaca-9ce4-4b54-b803-8b9be1f142ba", // Updated from Postman collection
-          metadata: {
-            amount,
-            to: selectedRecipient.walletAddress,
-            username: selectedRecipient.name,
-          },
-        }),
-      });
-
-      // 3️⃣ Reset UI states
+      // Reset UI after successful payment
       setSelectedRecipient(null);
       setAmount("");
       setScannedData(null);
       setShowPaymentModal(false);
+
+    } catch (err) {
+      console.error("confirmPayment error:", err);
+      toast.error("Payment failed");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // ------------------------------
+  // RENDER
+  // ------------------------------
   return (
     <>
       <div className="w-full max-w-3xl mx-auto">
@@ -137,7 +149,7 @@ export default function MakePaymentForm({
 
             <AmountInput amount={amount} onAmountChange={setAmount} />
 
-            {/* QR Button */}
+            {/* QR Scan Button */}
             <div className="flex justify-center">
               {!showScanner && (
                 <button
@@ -163,10 +175,7 @@ export default function MakePaymentForm({
       {/* QR Scanner Modal */}
       {showScanner && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <ScanQR
-            onQRScanned={handleQRScanned}
-            onCancel={() => setShowScanner(false)}
-          />
+          <ScanQR onQRScanned={handleQRScanned} onCancel={() => setShowScanner(false)} />
         </div>
       )}
 
@@ -178,7 +187,7 @@ export default function MakePaymentForm({
           recipient={selectedRecipient}
           amount={amount}
           isLoading={isLoading}
-          onConfirm={confirmPayment}
+          onConfirm={confirmPayment} // ⭐ NOW SUPPORTS memo + on-chain
         />
       )}
     </>
