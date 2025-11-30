@@ -119,11 +119,11 @@ export default function Header() {
     <div className="bg-green-200 backdrop-blur-sm border-b border-emerald-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-600 rounded-lg flex items-center justify-center shadow-md">
-            <img src="../logo.png" alt="Logo" className="w-full h-full object-cover" />
+          <div className="w-8 h-8 bg-green-200 flex items-center justify-center">
+            <img src="../favicon.ico" alt="Logo" className="w-full h-full object-cover" />
           </div>
           <Link href="/">
-            <h1 className="text-xl font-bold text-blue-600/90">zyncConnect</h1>
+            <h1 className="text-xl font-bold text-blue-600/90">AptoPay</h1>
           </Link>
         </div>
 
@@ -209,6 +209,13 @@ export default function Header() {
                 </button>
               </div>
             </>
+          ) : !connected ? (
+            <button
+              onClick={() => connect("Petra")}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+            >
+              Connect Wallet
+            </button>
           ) : null}
         </div>
       </div>
@@ -216,4 +223,3 @@ export default function Header() {
   );
 }
 
-// export 
