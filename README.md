@@ -1,8 +1,10 @@
-# GreenPay - Instant Crypto Payments with QR & Rewards
+# AptoPay - Instant Crypto Payments with QR & Rewards
 
 A modern, user-friendly cryptocurrency payment platform built on the Aptos blockchain that enables instant payments using QR codes and usernames with built-in reward systems.
 
-![GreenPay Logo](./public/logo.png)
+![apto Logo](./public/home.png)
+
+- 🚀 **Deployment:** [aptopay.shubhh.xyz](https://aptopay.shubhh.xyz/)
 
 ## 🌟 Features
 
@@ -33,7 +35,7 @@ A modern, user-friendly cryptocurrency payment platform built on the Aptos block
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd greenpay
+   cd Aptopay
    ```
 
 2. **Install dependencies**
@@ -45,7 +47,7 @@ A modern, user-friendly cryptocurrency payment platform built on the Aptos block
    Create a `.env.local` file:
    ```env
    MONGODB_URI=your_mongodb_connection_string
-   MONGODB_DB=greenpay
+   MONGODB_DB=Aptopay
    APTOS_API_KEY_MAINNET=your_aptos_api_key
    PHOTON_API_KEY=your_photon_rewards_api_key
    PHOTON_JWT_SECRET=your_jwt_secret
@@ -62,7 +64,7 @@ A modern, user-friendly cryptocurrency payment platform built on the Aptos block
 ## 🏗️ Project Structure
 
 ```
-greenpay/
+Aptopay/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes
 │   │   ├── payments/      # Payment management
