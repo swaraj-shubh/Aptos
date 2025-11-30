@@ -116,16 +116,30 @@ export default function Header() {
   }, [connected, account?.address]);
 
   return (
-    <div className="bg-green-200 backdrop-blur-sm border-b border-emerald-200 sticky top-0 z-50">
+    <div className="bg-green-300 backdrop-blur-sm border-b border-emerald-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-green-200 flex items-center justify-center">
-            <img src="../favicon.ico" alt="Logo" className="w-full h-full object-cover" />
-          </div>
-          <Link href="/">
-            <h1 className="text-xl font-bold text-blue-600/90">AptoPay</h1>
-          </Link>
-        </div>
+<div className="flex items-center space-x-3">
+  <Link href="/" className="flex items-center space-x-3 group">
+    <div className="relative">
+      <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
+        <img 
+          src="../favicon.ico" 
+          alt="AptoPay Logo" 
+          className="w-6 h-6 filter brightness-0 invert"
+        />
+      </div>
+      {/* Animated border effect */}
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-sm group-hover:blur-md"></div>
+    </div>
+    
+    <div className="flex flex-col">
+      <h1 className="text-2xl font-bold bg-gradient-to-r from-green-900 to-lime-700 bg-clip-text text-transparent group-hover:from-green-700 group-hover:to-emerald-800 transition-all duration-300">
+        AptoPay
+      </h1>
+      <div className="h-1 w-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform scale-x-0 group-hover:scale-x-100 origin-left"></div>
+    </div>
+  </Link>
+</div>
 
         <div className="flex items-center space-x-4">
           {/* Retry indicator */}
@@ -212,7 +226,7 @@ export default function Header() {
           ) : !connected ? (
             <button
               onClick={() => connect("Petra")}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors cursor-pointer shadow-lg hover:shadow-xl flex items-center space-x-2 transform hover:scale-105"
             >
               Connect Wallet
             </button>

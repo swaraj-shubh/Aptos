@@ -46,17 +46,7 @@ export default function Home() {
     <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
       {/* Left Side - Content */}
       <div className="flex-1 text-center lg:text-left">
-        {/* Logo and Title */}
-        <div className="flex justify-center lg:justify-start items-center space-x-3 mb-8">
-          <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
-            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2L2 7L12 12L22 7L12 2Z" />
-              <path d="M2 17L12 22L22 17" />
-              <path d="M2 12L12 17L22 12" />
-            </svg>
-          </div>
-          <h1 className="text-4xl font-bold text-emerald-900">AptosPay</h1>
-        </div>
+
 
         {/* Main Heading */}
         <h2 className="text-5xl lg:text-6xl font-bold text-emerald-800 mb-6">
@@ -89,7 +79,8 @@ export default function Home() {
       </div>
     </div>
 
-<div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+<div className="flex flex-col lg:flex-row items-center justify-between mt-15 gap-12">
+  
   {/* Left Side - Image */}
   <div className="flex-1 flex justify-center lg:justify-start">
     <div className="relative">
@@ -123,7 +114,7 @@ export default function Home() {
       <button
         onClick={handleConnectWallet}
         disabled={isLoading}
-        className="w-full bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold py-4 rounded-xl hover:from-green-700 hover:to-emerald-800 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+        className="w-full bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold py-4 rounded-xl hover:from-blue-700 hover:to-blue-500 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
       >
         {isLoading ? (
           <div className="flex items-center justify-center space-x-2">
@@ -162,7 +153,7 @@ export default function Home() {
       />
       <FeatureCard
         icon="🔒"
-        title="Secure & Reversible"
+        title="Secure & Robust"
         description="Military-grade security with reversible payment options"
       />
       <FeatureCard
@@ -207,36 +198,45 @@ export default function Home() {
       </section>
 
       {/* Rewards Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <Link href="/rewards">
-            <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl p-8 text-white shadow-2xl transform hover:scale-105 transition-transform duration-300 cursor-pointer">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">🎁</span>
-              </div>
-              <h3 className="text-3xl font-bold mb-4">Earn Exciting Rewards!</h3>
-              <p className="text-green-100 text-lg mb-6">
-                Every payment you make or receive earns you reward points. Click
-                here to view your rewards!
-              </p>
-              <div className="grid md:grid-cols-3 gap-4 text-sm">
-                <div className="bg-white/20 rounded-lg p-4">
-                  <div className="text-2xl mb-2">🏆</div>
-                  <div className="font-semibold">Loyalty Points</div>
-                </div>
-                <div className="bg-white/20 rounded-lg p-4">
-                  <div className="text-2xl mb-2">💎</div>
-                  <div className="font-semibold">Cashback Rewards</div>
-                </div>
-                <div className="bg-white/20 rounded-lg p-4">
-                  <div className="text-2xl mb-2">⭐</div>
-                  <div className="font-semibold">Exclusive Benefits</div>
-                </div>
-              </div>
-            </div>
-          </Link>
+<section className="py-16 px-4">
+  <div className="max-w-4xl mx-auto text-center">
+    <div className="relative rounded-3xl p-8 text-white shadow-2xl transform hover:scale-105 transition-transform duration-300 cursor-pointer overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
+        style={{ backgroundImage: "url('/money.jpg')" }}
+      />
+      {/* Gradient Overlay for Better Text Readability */}
+      <div className="absolute inset-0 bg-gradient-to-r from-green-500/40 to-emerald-600/40 z-10"></div>
+      
+      {/* Content */}
+      <div className="relative z-20">
+        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-sm border border-white/30">
+          <span className="text-2xl">🎁</span>
         </div>
-      </section>
+        <h3 className="text-3xl font-bold mb-4 drop-shadow-lg">Earn Exciting Rewards!</h3>
+        <p className="text-green-50 text-lg mb-6 drop-shadow-md max-w-2xl mx-auto leading-relaxed">
+          Every payment you make or receive earns you reward points. Click
+          here to view your rewards!
+        </p>
+        <div className="grid md:grid-cols-3 gap-4 text-sm">
+          <div className="bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-all duration-300">
+            <div className="text-2xl mb-2 drop-shadow">🏆</div>
+            <div className="font-semibold">Loyalty Points</div>
+          </div>
+          <div className="bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-all duration-300">
+            <div className="text-2xl mb-2 drop-shadow">💎</div>
+            <div className="font-semibold">Cashback Rewards</div>
+          </div>
+          <div className="bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-all duration-300">
+            <div className="text-2xl mb-2 drop-shadow">⭐</div>
+            <div className="font-semibold">Exclusive Benefits</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
     </div>
   );
 }

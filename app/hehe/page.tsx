@@ -25,13 +25,6 @@ export default function Page() {
       <div className="w-80 bg-white/80 backdrop-blur-sm border-r border-emerald-200 shadow-lg">
         <div className="p-6">
 
-          {/* LOGO */}
-          <div className="flex items-center space-x-3 mb-8">
-            <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-600 rounded-lg flex items-center justify-center shadow-md">
-              <img src="../logo.png" alt="Logo" className="w-full h-full object-cover" />
-            </div>
-            <h1 className="text-xl font-bold text-emerald-900">GreenPay</h1>
-          </div>
 
           {/* NAVIGATION */}
           <div className="space-y-2">
