@@ -2,9 +2,19 @@
 
 A modern, user-friendly cryptocurrency payment platform built on the Aptos blockchain that enables instant payments using QR codes and usernames with built-in reward systems.
 
+- 🚀 **Deployment:** [aptopay.shubhh.xyz](https://aptopay.shubhh.xyz/)
+
+
 ![apto Logo](./public/home.png)
 
-- 🚀 **Deployment:** [aptopay.shubhh.xyz](https://aptopay.shubhh.xyz/)
+---
+
+![apto Logo](./public/qrscan.png)
+
+---
+
+![apto Logo](./public/hehe.png)
+
 
 ## 🌟 Features
 
@@ -85,7 +95,6 @@ A modern, user-friendly cryptocurrency payment platform built on the Aptos block
 
 - **Wallet Authentication**: Secure Aptos wallet integration
 - **Input Validation**: Comprehensive form validation
-- **SQL Injection Protection**: Mongoose with type safety
 - **Transaction Security**: On-chain verification
 - **Error Handling**: Comprehensive error boundaries
 
@@ -120,4 +129,4 @@ npm start
 
 ---
 
-Built with ❤️ using Next.js, Aptos, and MongoDB
+Built with ❤️ using Next.js and Aptos
